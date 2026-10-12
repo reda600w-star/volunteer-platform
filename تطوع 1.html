@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة تطوعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #2563eb; --s: #059669; --a: #f59e0b; --err: #e11d48; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; background: var(--bg); margin: 0; color: #1e293b; }
+        
+        /* شاشة الدخول */
+        .auth-overlay { position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .auth-card { width: 90%; max-width: 450px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-family: inherit; }
+        input:focus, textarea:focus { border-color: var(--p); outline: none; }
+
+        /* التطبيق الرئيسي */
+        .app-container { display: none; max-width: 900px; margin: 40px auto; padding: 20px; }
+        .nav-bar { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+        /* منطقة الإداري */
+        .admin-zone { background: #eff6ff; padding: 25px; border-radius: 24px; margin: 30px 0; border: 2px solid #dbeafe; }
+        
+        /* بطاقة الفعالية */
+        .event-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .price-badge { padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+        .free { background: #dcfce7; color: #166534; }
+        .paid { background: #fef3c7; color: #92400e; }
+
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-p { background: var(--p); color: white; }
+        .btn-info { background: #f1f5f9; color: var(--p); border: 1px solid var(--p); }
+
+        /* النافذة المنبثقة (Modal) */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 90%; max-width: 500px; padding: 30px; border-radius: 25px; position: relative; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<!-- 1. شاشة الدخول -->
+<div id="authOverlay" class="auth-overlay">
+    <div class="auth-card text-right">
+        <h2 style="text-align:center">تسجيل الدخول بالبريد</h2>
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+        <div id="regFields" class="hidden">
+            <input type="text" id="loginName" placeholder="الاسم الكامل">
+            <select id="loginRole" onchange="toggleExtra()">
+                <option value="volunteer">متطوع</option>
+                <option value="admin">إداري</option>
+            </select>
+            <input type="text" id="loginExtra" class="hidden" placeholder="كود المنظمة">
+        </div>
+        <button class="btn btn-p" style="width:100%; margin-top:10px" onclick="handleAuth()">دخول للشبكة</button>
+    </div>
+</div>
+
+<!-- 2. التطبيق الرئيسي -->
+<div id="app" class="app-container">
+    <div class="nav-bar">
+        <div>
+            <h3 id="userNameDisplay" style="margin:0"></h3>
+            <small id="userRoleDisplay" style="color:var(--p)"></small>
+        </div>
+        <button class="btn" style="background:#fee2e2; color:#991b1b" onclick="location.reload()">خروج</button>
+    </div>
+
+    <!-- لوحة الإداري (الخيار الخامس) -->
+    <div id="adminPanel" class="admin-zone hidden">
+        <h4 style="margin-top:0">إضافة فعالية جديدة (5 حقول)</h4>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+            <input type="text" id="evName" placeholder="1. اسم الفعالية">
+            <input type="date" id="evDate"> <!-- 2. التاريخ -->
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr; gap:10px">
+            <input type="number" id="evPrice" placeholder="3. السعر (0 للمجاني)">
+            <textarea id="evDesc" rows="3" placeholder="4. ما هي الفعالية؟ (اكتب التفاصيل هنا للمتطوعين)"></textarea>
+            <!-- الحقل 5 هو "جهة التنظيم" ويتم أخذه تلقائياً من اسم الإداري -->
+        </div>
+        <button class="btn btn-p" style="width:100%" onclick="saveEvent()">نشر في الشبكة</button>
+    </div>
+
+    <!-- قائمة الفعاليات -->
+    <div id="eventsList" style="margin-top:30px"></div>
+</div>
+
+<!-- نافذة التفاصيل (Modal) -->
+<div id="detailsModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle"></h2>
+        <hr>
+        <p style="font-weight: bold; color: var(--p);">تفاصيل الفعالية:</p>
+        <p id="modalBody" style="line-height: 1.6; color: #475569;"></p>
+        <div id="modalPrice"></div>
+        <br>
+        <button class="btn btn-p" style="width: 100%" onclick="closeModal()">إغلاق</button>
+    </div>
+</div>
+
+<script>
+    let user = null;
+    let events = JSON.parse(localStorage.getItem('v2026_events')) || [];
+
+    function handleAuth() {
+        const email = document.getElementById('loginEmail').value;
+        if(!email) return alert("أدخل البريد");
+
+        const saved = localStorage.getItem('u_' + email);
+        if(!saved && document.getElementById('regFields').classList.contains('hidden')) {
+            document.getElementById('regFields').classList.remove('hidden');
+            return;
+        }
+
+        if(saved) {
+            user = JSON.parse(saved);
+        } else {
+            user = {
+                email: email,
+                name: document.getElementById('loginName').value || email.split('@')[0],
+                role: document.getElementById('loginRole').value,
+                extra: document.getElementById('loginExtra').value
+            };
+            localStorage.setItem('u_' + email, JSON.stringify(user));
+        }
+        startApp();
+    }
+
+    function toggleExtra() {
+        document.getElementById('loginExtra').classList.toggle('hidden', document.getElementById('loginRole').value !== 'admin');
+    }
+
+    function startApp() {
+        document.getElementById('authOverlay').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('userNameDisplay').innerText = "مرحباً، " + user.name;
+        document.getElementById('userRoleDisplay').innerText = user.role === 'admin' ? "رتبة: إداري نظام" : "رتبة: متطوع";
+        
+        if(user.role === 'admin') document.getElementById('adminPanel').classList.remove('hidden');
+        renderEvents();
+    }
+
+    // إضافة فعالية مع حقل "ما هي الفعالية"
+    function saveEvent() {
+        const name = document.getElementById('evName').value;
+        const date = document.getElementById('evDate').value;
+        const price = parseFloat(document.getElementById('evPrice').value);
+        const desc = document.getElementById('evDesc').value; // الحقل الجديد
+
+        if(!name || !date || isNaN(price) || !desc) return alert("يرجى تعبئة كافة الحقول بما فيها وصف الفعالية");
+
+        const newEv = { id: Date.now(), name, date, price, desc, creator: user.name };
+        events.unshift(newEv);
+        localStorage.setItem('v2026_events', JSON.stringify(events));
+        renderEvents();
+        
+        // مسح الحقول
+        document.getElementById('evName').value = '';
+        document.getElementById('evDesc').value = '';
+    }
+
+    function renderEvents() {
+        const container = document.getElementById('eventsList');
+        container.innerHTML = '<h3>الفعاليات المنشورة في الشبكة</h3>';
+
+        events.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            let priceText = ev.price === 0 ? 
+                `<span class="price-badge free">مساهمة غير مدفوعة</span>` : 
+                `<span class="price-badge paid">المبلغ للساعة: ${ev.price} ريال</span>`;
+
+            card.innerHTML = `
+                <div>
+                    <h4 style="margin:0">${ev.name}</h4>
+                    <small>${ev.date} | بواسطة: ${ev.creator}</small>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px">
+                    ${priceText}
+                    <!-- الزر المطلوب: ما هي الفعالية -->
+                    <button class="btn btn-info" onclick="showDetails(${ev.id})">ما هي الفعالية؟</button>
+                    ${user.role === 'admin' ? `<button onclick="deleteEv(${ev.id})" style="color:red; background:none; border:none; cursor:pointer">حذف</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // وظيفة إظهار التفاصيل التي كتبها الإداري
+    function showDetails(id) {
+        const ev = events.find(e => e.id === id);
+        document.getElementById('modalTitle').innerText = ev.name;
+        document.getElementById('modalBody').innerText = ev.desc; // عرض ما كتبه الإداري
+        document.getElementById('modalPrice').innerHTML = `<br><hr><strong>التكلفة:</strong> ${ev.price === 0 ? 'تطوعي' : ev.price + ' ريال/ساعة'}`;
+        document.getElementById('detailsModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('detailsModal').style.display = 'none';
+    }
+
+    function deleteEv(id) {
+        events = events.filter(e => e.id !== id);
+        localStorage.setItem('v2026_events', JSON.stringify(events));
+        renderEvents();
+    }
+</script>
+</body>
+</html>
