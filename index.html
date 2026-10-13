@@ -1,1 +1,203 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منصة تطوع</title>
+<meta name="description" content="منصة تطوع: اكتشف فرص التطوع، سجّل وقتك، واحصل على مكافأتك.">
+<meta name="theme-color" content="#0b8a68">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f1;--card:#fff;--ink:#14283a;--mut:#5d6f7c;--g:#0b8a68;--gd:#066349;--on:#fff;--gold:#e0a030;--line:#d9e3df;--red:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b24;--card:#17262f;--ink:#e8f0ee;--mut:#9ab0ab;--g:#2fc79c;--gd:#1f9e7a;--on:#06251c;--line:#27404a;--gold:#f0b94d;--red:#ff7b6b}}
+:root[data-theme="dark"]{--bg:#0f1b24;--card:#17262f;--ink:#e8f0ee;--mut:#9ab0ab;--g:#2fc79c;--gd:#1f9e7a;--on:#06251c;--line:#27404a;--gold:#f0b94d;--red:#ff7b6b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 'IBM Plex Sans Arabic',Tahoma,sans-serif}
+#app{max-width:640px;margin:auto;padding:16px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 14px}
+.logo{font-size:26px;color:var(--g)}
+header div{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--mut)}
+.lnk{background:none;border:0;color:var(--g);font:inherit;cursor:pointer;text-decoration:underline}
+nav,.seg{display:flex;gap:6px;background:var(--line);padding:4px;border-radius:12px;margin-bottom:16px}
+nav button,.seg button{flex:1;border:0;background:none;color:var(--ink);font:inherit;font-weight:500;padding:10px 4px;border-radius:9px;cursor:pointer}
+nav .on,.seg .on{background:var(--card);color:var(--g);box-shadow:0 1px 3px #0002}
+.auth h1{font-size:60px;margin:36px 0 4px;color:var(--g);line-height:1.1}
+.auth>p{color:var(--mut);margin:0 0 24px;font-size:18px}
+label{display:block;font-size:14px;color:var(--mut);margin-bottom:12px}
+input,select,textarea{display:block;width:100%;margin-top:4px;padding:12px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px}
+:is(input,select,textarea,button):focus-visible{outline:2px solid var(--g);outline-offset:1px}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;background:var(--g);color:var(--on);font:inherit;font-weight:700;cursor:pointer;margin-top:6px}
+.btn:active{background:var(--gd)}
+.card{background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--g);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.card.paid{border-inline-start-color:var(--gold)}
+.row{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;padding:14px;background:none;border:0;font:inherit;color:inherit;text-align:start;cursor:pointer}
+.row b{display:block}.row small{color:var(--mut)}
+.chip{font-style:normal;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--line);white-space:nowrap}
+.chip.gold{background:var(--gold);color:#2b1c00}
+.more{margin:0;padding:0 14px 8px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+.more dt{color:var(--mut);font-size:14px}.more dd{margin:0}
+.card>.btn,.card>.del{margin:8px 14px 14px;width:calc(100% - 28px)}
+.del{padding:10px;border:1px solid var(--red);color:var(--red);background:none;border-radius:10px;font:inherit;cursor:pointer}
+.timer{text-align:center}
+.dial{width:230px;height:230px;border-radius:50%;margin:18px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:8px solid var(--g);background:var(--card);color:var(--ink);cursor:pointer;font:inherit}
+.dial span{font-size:38px;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr}
+.dial small{color:var(--mut)}
+.dial.on{background:var(--g);color:var(--on);animation:p 2s infinite}
+.dial.on small{color:var(--on)}
+@keyframes p{50%{box-shadow:0 0 0 14px #0b8a6830}}
+@media (prefers-reduced-motion:reduce){.dial.on{animation:none}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.stats b{display:block;font-size:19px;color:var(--g);direction:ltr}.stats small{color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+h2{font-size:18px;margin:22px 0 10px}
+.empty{color:var(--mut);text-align:center;padding:24px;border:1px dashed var(--line);border-radius:10px}
+.log{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.log small{color:var(--mut);display:block}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;font-size:14px;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+<style>
+.who{position:relative}
+.av{width:40px;height:40px;border-radius:50%;border:0;background:var(--g);color:var(--on);font-weight:700;font-size:18px;font-family:inherit;cursor:pointer}
+.menu{position:absolute;inset-inline-end:0;top:48px;z-index:5;min-width:230px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:4px;box-shadow:0 8px 24px #0003;color:var(--ink)}
+.menu[hidden]{display:none}.menu small{color:var(--mut)}
+.warn{background:#fff3d6;color:#5b3d00;border-radius:10px;padding:12px;margin-bottom:14px;font-size:14px}
+.warn .lnk{color:#7a4f00;font-size:14px}
+.pw{position:relative;display:block}.pw input{padding-inline-end:76px}
+.pw button{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-35%);background:none;border:0;color:var(--g);font:inherit;font-size:13px;cursor:pointer}
+#q{margin:0 0 10px}.btn:disabled{opacity:.6}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status"></div>
+<script>
+/* ===== إعدادات Firebase (راجع README) ===== */
+const CFG={apiKey:"AIzaSyCqwamZj3Gb9Uwh8YWCyPFp_MkL7tzSNGg",dbUrl:"https://ttoa-1575d-default-rtdb.firebaseio.com",adminEmail:"reda600w@gmail.com"};
+const READY=!/PASTE|PROJECT_ID/.test(CFG.apiKey+CFG.dbUrl);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS={g:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let S=LS.g('s',null),me=null,isAdmin=false,opps=[],last='',tab='opps',open=null,mode='in',sel=null,q='',flt='all',tick=null;
+const hms=ms=>{const s=Math.floor(ms/1000);return[s/3600|0,(s/60|0)%60,s%60].map(n=>String(n).padStart(2,'0')).join(':')};
+const totMs=u=>u.prior*6e4+u.logs.reduce((s,l)=>s+l.ms,0);
+const earn=u=>u.logs.reduce((s,l)=>s+l.ms/36e5*l.rate,0);
+const pay=r=>r>0?r+' ر.س / ساعة':'تطوع بدون مكافأة';
+const fDate=d=>{const x=new Date(d+'T00:00');return isNaN(x)?d:x.toLocaleDateString('ar-SA-u-ca-gregory',{weekday:'long',day:'numeric',month:'long',year:'numeric'})};
+const fTime=t=>{const x=new Date('1970-01-01T'+t);return isNaN(x)?t:x.toLocaleTimeString('ar-SA',{hour:'numeric',minute:'2-digit'})};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2800)}
+const ER={EMAIL_EXISTS:'هذا البريد مسجّل مسبقًا، سجّل الدخول',INVALID_LOGIN_CREDENTIALS:'البريد أو كلمة المرور غير صحيحة',EMAIL_NOT_FOUND:'لا يوجد حساب بهذا البريد',INVALID_PASSWORD:'كلمة المرور غير صحيحة',WEAK_PASSWORD:'كلمة المرور يجب ألا تقل عن 6 خانات',INVALID_EMAIL:'البريد الإلكتروني غير صالح',MISSING_PASSWORD:'أدخل كلمة المرور',TOO_MANY_ATTEMPTS:'محاولات كثيرة، انتظر قليلًا ثم أعد المحاولة','Permission denied':'ليست لديك صلاحية لهذا الإجراء'};
+const msg=e=>ER[Object.keys(ER).find(k=>String(e.message).includes(k))]||'تعذر الاتصال، تحقق من الإنترنت وأعد المحاولة';
+ 
+/* ===== Firebase عبر REST ===== */
+const J=async(u,o)=>{const r=await fetch(u,o),d=await r.json().catch(()=>null);if(!r.ok)throw new Error(d?.error?.message||(typeof d?.error=='string'?d.error:'')||'NET');return d};
+const post=(u,b)=>J(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+const au=(m,b)=>post('https://identitytoolkit.googleapis.com/v1/accounts:'+m+'?key='+CFG.apiKey,b);
+async function tok(){if(!S)return null;if(Date.now()>S.exp-6e4){const r=await J('https://securetoken.googleapis.com/v1/token?key='+CFG.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+S.rt});S.idt=r.id_token;S.rt=r.refresh_token;S.exp=Date.now()+r.expires_in*1e3;LS.s('s',S)}return S.idt}
+const rd=async(p,m='GET',b)=>{const t=await tok();return J(CFG.dbUrl+'/'+p+'.json'+(t?'?auth='+t:''),{method:m,body:b===undefined?undefined:JSON.stringify(b)})};
+const save=()=>rd('users/'+S.uid,'PUT',me).catch(e=>toast(msg(e)));
+const typing=()=>/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
+ 
+async function pull(){try{const o=await rd('opps')||{};const l=Object.entries(o).map(([id,v])=>({...v,id})).sort((a,b)=>b.ts-a.ts),j=JSON.stringify(l);
+ if(j!==last&&!typing()){const grew=last&&l.length>opps.length;last=j;opps=l;if(grew)toast('أُضيفت فرصة تطوع جديدة');render()}}catch(e){}}
+ 
+async function enter(){const l=await au('lookup',{idToken:await tok()});S.ver=l.users[0].emailVerified;LS.s('s',S);
+ isAdmin=S.email.toLowerCase()==CFG.adminEmail.toLowerCase();
+ if(!isAdmin){me=await rd('users/'+S.uid)||{name:S.email.split('@')[0]};me.logs=me.logs||[];me.prior=me.prior||0;me.bio=me.bio||'';me.run=me.run||null}
+ tab=isAdmin?'adm':'opps';render()}
+ 
+/* ===== العرض ===== */
+const card=o=>`<article class="card ${o.rate>0?'paid':''}"><button class="row" data-a="open" data-v="${o.id}"><span><b>${esc(o.title)}</b><small>${fDate(o.date)}</small></span><i class="chip ${o.rate>0?'gold':''}">${o.rate>0?o.rate+' ر.س/س':'بدون مكافأة'}</i></button>`+
+(open==o.id?`<dl class="more"><dt>البدء</dt><dd>${fTime(o.time)}</dd><dt>التاريخ</dt><dd>${fDate(o.date)}</dd><dt>تعريف الفرصة</dt><dd>${esc(o.desc)||'—'}</dd><dt>المال</dt><dd>${pay(o.rate)}</dd></dl>`+(isAdmin?`<button class="del" data-a="del" data-v="${o.id}">حذف الفرصة</button>`:`<button class="btn" data-a="go" data-v="${o.id}">${S?'ابدأ التطوع':'سجّل الدخول للتطوع'}</button>`):'')+`</article>`;
+const list=()=>{const l=opps.filter(o=>(flt=='all'||(flt=='paid')==o.rate>0)&&(o.title+(o.desc||'')).includes(q));return l.length?l.map(card).join(''):'<p class="empty">لا توجد فرص مطابقة حاليًا.</p>'};
+const filters=()=>`<input id="q" placeholder="ابحث عن فرصة..." value="${esc(q)}"><div class="seg">${[['all','الكل'],['paid','بمكافأة'],['free','بدون مكافأة']].map(([k,t])=>`<button data-a="flt" data-v="${k}" class="${flt==k?'on':''}">${t}</button>`).join('')}</div>`;
+const pwf=()=>`<label>كلمة المرور<span class="pw"><input id="pw" type="password" autocomplete="current-password"><button type="button" data-a="eye">إظهار</button></span></label>`;
+const authView=()=>`<section class="auth"><h1>منصة تطوع</h1><p>اكتشف الفرص، سجّل وقتك، واحصل على مكافأتك.</p>
+<div class="seg">${[['in','دخول'],['up','حساب جديد'],['ad','إداري']].map(([k,t])=>`<button data-a="mode" data-v="${k}" class="${mode==k?'on':''}">${t}</button>`).join('')}</div>
+${mode=='ad'?`<label>رمز التحقق<input id="code" type="password" autocomplete="off"></label>`:`${mode=='up'?'<label>الاسم<input id="nm" autocomplete="name"></label>':''}<label>البريد الإلكتروني<input id="em" type="email" inputmode="email" dir="ltr" autocomplete="email"></label>${pwf()}`}
+<button class="btn" data-a="auth" data-busy="1">${mode=='ad'?'دخول كإداري':mode=='up'?'إنشاء الحساب':'تسجيل الدخول'}</button>
+${mode=='in'?'<p style="text-align:center"><button class="lnk" data-a="reset" data-busy="1">نسيت كلمة المرور؟</button></p>':''}</section>`;
+const head=()=>`<header><b class="logo">منصة تطوع</b><div class="who"><button class="av" data-a="menu" aria-label="الحساب">${esc((isAdmin?'إ':me.name)[0]||'?')}</button><div id="menu" class="menu" hidden><b>${isAdmin?'حساب إداري':esc(me.name)}</b><small dir="ltr">${esc(S.email)}</small>${isAdmin?'':`<small>${S.ver?'✓ البريد مفعّل':'البريد غير مفعّل'}</small>`}<button class="btn" data-a="out">تسجيل الخروج</button></div></div></header>`+(isAdmin?'':`<nav>${[['opps','الفرص'],['timer','المؤقت'],['prof','ملفي']].map(([k,t])=>`<button data-a="tab" data-v="${k}" class="${tab==k?'on':''}">${t}</button>`).join('')}</nav>`);
+const banner=()=>isAdmin||S.ver?'':`<div class="warn">فعّل بريدك عبر الرابط الذي أرسلناه إلى ${esc(S.email)}<br><button class="lnk" data-a="resend" data-busy="1">إعادة الإرسال</button> · <button class="lnk" data-a="chk" data-busy="1">تحققت</button></div>`;
+const oppsView=()=>`<section>${filters()}<div id="list">${list()}</div></section>`;
+function timerView(){const r=me.run;sel=r?r.oid:(opps.some(x=>x.id==sel)?sel:opps[0]?.id);
+return `<section class="timer"><label>الفرصة<select id="sel" ${r?'disabled':''}>${r&&!opps.some(x=>x.id==r.oid)?`<option>${esc(r.title)}</option>`:''}${opps.map(o=>`<option value="${o.id}" ${o.id==sel?'selected':''}>${esc(o.title)}</option>`).join('')}</select></label>
+<button class="dial ${r?'on':''}" data-a="tog"><span id="clk">00:00:00</span><small>${r?'اضغط للإيقاف':'اضغط للبدء'}</small></button>
+<div class="stats"><div><b id="tot">00:00:00</b><small>إجمالي وقتك</small></div><div><b id="ern">0</b><small>ر.س مكافآت</small></div><div><b>${me.logs.length}</b><small>جلسات</small></div></div></section>`}
+const profView=()=>`<section><label>البريد الإلكتروني<input value="${esc(S.email)}" dir="ltr" disabled></label>
+<label>الاسم<input id="pn" value="${esc(me.name)}"></label>
+<label>نبذة تعريفية<textarea id="pb" rows="3" placeholder="اكتب عن اهتماماتك ومهاراتك">${esc(me.bio)}</textarea></label>
+<label>ساعات تطوع سابقة (تُجمع مع وقت المؤقت)<input id="pp" type="number" min="0" step="0.5" inputmode="decimal" value="${me.prior/60}"></label>
+<button class="btn" data-a="save" data-busy="1">حفظ الملف الشخصي</button>
+<div class="stats"><div><b id="tot">00:00:00</b><small>إجمالي الوقت</small></div><div><b id="ern">0</b><small>ر.س مكافآت</small></div><div><b>${me.logs.length}</b><small>جلسات</small></div></div>
+<h2>سجل التطوع</h2>${me.logs.length?me.logs.slice(0,20).map(l=>`<div class="log"><span>${esc(l.title)}<small>${new Date(l.at).toLocaleDateString('ar-SA-u-ca-gregory')}</small></span><span style="direction:ltr">${hms(l.ms)}<small>${(l.ms/36e5*l.rate).toFixed(2)} ر.س</small></span></div>`).join(''):'<p class="empty">لم تسجل أي جلسة بعد. ابدأ المؤقت من تبويب المؤقت.</p>'}</section>`;
+const adminView=()=>`<section><h2>إضافة فرصة</h2><label>اسم الفرصة<input id="t"></label>
+<div class="two"><label>التاريخ<input id="d" type="date"></label><label>وقت البدء<input id="h" type="time"></label></div>
+<label>المكافأة (ريال للساعة، 0 = بدون مكافأة)<input id="r" type="number" min="0" value="0" inputmode="decimal"></label>
+<label>تعريف الفرصة<textarea id="ds" rows="3"></textarea></label>
+<button class="btn" data-a="add" data-busy="1">نشر الفرصة</button>
+<h2>الفرص الحالية (${opps.length})</h2>${opps.length?opps.map(card).join(''):'<p class="empty">لم تُضف فرص بعد. انشر أول فرصة من النموذج أعلاه.</p>'}</section>`;
+ 
+function render(){clearInterval(tick);const a=$('#app');
+ if(!READY){a.innerHTML='<section class="auth"><h1>منصة تطوع</h1><p class="empty">أكمل إعداد Firebase في أعلى ملف index.html (التفاصيل في README).</p></section>';return}
+ if(S&&!me&&!isAdmin){a.innerHTML='<p class="empty">جارٍ التحميل...</p>';return}
+ if(!S){a.innerHTML=authView()+'<h2>الفرص المتاحة</h2>'+filters()+`<div id="list">${list()}</div>`;return}
+ a.innerHTML=head()+banner()+(isAdmin?adminView():({opps:oppsView,timer:timerView,prof:profView}[tab])());
+ if(me){tick=setInterval(upd,1000);upd()}}
+function upd(){if(!me)return;const r=me.run,e=r?Date.now()-r.t:0,c=$('#clk'),t=$('#tot'),n=$('#ern');
+ if(c)c.textContent=hms(e);if(t)t.textContent=hms(totMs(me)+e);if(n)n.textContent=(earn(me)+(r?e/36e5*r.rate:0)).toFixed(2)}
+ 
+/* ===== الإجراءات ===== */
+const A={
+mode(v){mode=v;render()},tab(v){tab=v;render()},flt(v){flt=v;render()},
+open(v){open=open==v?null:v;render()},
+menu(){const m=$('#menu');m.hidden=!m.hidden},
+eye(v,b){const p=$('#pw');p.type=p.type=='password'?'text':'password';b.textContent=p.type=='password'?'إظهار':'إخفاء'},
+go(v){if(!S){toast('سجّل الدخول أولًا لتبدأ التطوع');scrollTo({top:0,behavior:'smooth'});return}sel=v;tab='timer';render()},
+out(){S=null;me=null;isAdmin=false;LS.s('s',null);mode='in';tab='opps';render();scrollTo(0,0);toast('تم تسجيل الخروج')},
+async auth(){
+ let em=CFG.adminEmail,pw,nm;
+ if(mode=='ad')pw=$('#code').value;
+ else{em=$('#em').value.trim().toLowerCase();pw=$('#pw').value;if(!/^\S+@\S+\.\S+$/.test(em))return toast('أدخل بريدًا إلكترونيًا صحيحًا');
+  if(mode=='up'&&!(nm=$('#nm').value.trim()))return toast('أدخل اسمك')}
+ try{const r=await au(mode=='up'?'signUp':'signInWithPassword',{email:em,password:pw,returnSecureToken:true});
+  S={uid:r.localId,email:r.email,rt:r.refreshToken,idt:r.idToken,exp:Date.now()+ +r.expiresIn*1e3};
+  if(mode=='up'){await au('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:r.idToken});await rd('users/'+S.uid,'PUT',{name:nm,bio:'',prior:0});toast('أرسلنا رابط التفعيل إلى بريدك')}
+  await enter()}
+ catch(e){S=null;toast(mode=='ad'&&/INVALID|PASSWORD|EMAIL_NOT/.test(e.message)?'رمز التحقق غير صحيح':msg(e))}},
+async reset(){const em=$('#em').value.trim();if(!em)return toast('اكتب بريدك الإلكتروني أولًا');await au('sendOobCode',{requestType:'PASSWORD_RESET',email:em});toast('أرسلنا رابط استعادة كلمة المرور إلى بريدك')},
+async resend(){await au('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:await tok()});toast('أعدنا إرسال رابط التفعيل')},
+async chk(){const l=await au('lookup',{idToken:await tok()});S.ver=l.users[0].emailVerified;LS.s('s',S);render();toast(S.ver?'تم تفعيل بريدك، شكرًا لك':'لم يُفعَّل بعد، افتح الرابط في بريدك')},
+async tog(){
+ if(!S.ver)return toast('فعّل بريدك الإلكتروني أولًا لتسجيل وقتك');
+ if(me.run){const r=me.run,ms=Date.now()-r.t;me.logs.unshift({title:r.title,ms,rate:r.rate,at:Date.now()});me.run=null;toast('تم تسجيل '+hms(ms))}
+ else{const o=opps.find(x=>x.id==sel);if(!o)return toast('لا توجد فرصة لبدء المؤقت');me.run={oid:o.id,t:Date.now(),title:o.title,rate:o.rate};toast('بدأ احتساب الوقت')}
+ render();await save()},
+async save(){me.name=$('#pn').value.trim()||me.name;me.bio=$('#pb').value;me.prior=Math.max(0,+$('#pp').value||0)*60;await save();render();toast('تم حفظ الملف الشخصي')},
+async add(){const t=$('#t').value.trim(),d=$('#d').value,h=$('#h').value;
+ if(!t||!d||!h)return toast('أدخل الاسم والتاريخ ووقت البدء');
+ await rd('opps/'+Date.now().toString(36),'PUT',{title:t,date:d,time:h,rate:Math.max(0,+$('#r').value||0),desc:$('#ds').value.trim(),ts:Date.now()});
+ last='';await pull();toast('تم نشر الفرصة، وتظهر الآن للجميع')},
+async del(v,b){
+ if(b.dataset.s!='1'){b.dataset.s='1';b.textContent='تأكيد الحذف';setTimeout(()=>{if(b.isConnected){b.dataset.s='';b.textContent='حذف الفرصة'}},3000);return}
+ await rd('opps/'+v,'DELETE');open=null;last='';await pull();toast('تم حذف الفرصة')}
+};
+document.addEventListener('click',async e=>{
+ if(!e.target.closest('.who')){const m=$('#menu');if(m)m.hidden=true}
+ const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
+ const t=b.textContent;if(b.dataset.busy){b.disabled=true;b.textContent='جارٍ التنفيذ...'}
+ try{await A[b.dataset.a]?.(b.dataset.v,b)}catch(x){toast(msg(x))}
+ finally{if(b.isConnected&&b.dataset.busy){b.disabled=false;b.textContent=t}}});
+document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value.trim();$('#list').innerHTML=list()}});
+document.addEventListener('change',e=>{if(e.target.id=='sel')sel=e.target.value});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&['em','pw','code','nm'].includes(e.target.id))$('[data-a=auth]').click()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+ 
+render();
+if(READY){pull();setInterval(pull,6000);if(S)enter().catch(()=>{S=null;LS.s('s',null);render()})}
+</script>
+</body>
+</html>
